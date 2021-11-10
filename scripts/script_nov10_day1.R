@@ -52,3 +52,61 @@ plogis(fixef(M_3) + c(-1, 1) * 1.96 * 0.66)
 
 alcohol_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr05/main/data/alcohol.csv")
 
+# infer normal model for Russia
+M_4 <- lm(alcohol ~ 1, data = filter(alcohol_df, country == 'Russia'))
+coef(M_4) # maximum likelihood estimator for the mean of the normal distribution
+sigma(M_4)
+
+# multilevel normal model
+M_5 <- lmer(alcohol ~ 1 + (1|country), data = alcohol_df)
+summary(M_5)
+
+# estimate of theta
+fixef(M_5)
+
+# the estimates of tau and sigma, respectively
+as.data.frame(VarCorr(M_5))[,5]
+
+# estimates of mu's
+coef(M_5)
+
+# estimates of the zeta's
+ranef(M_5)
+
+head(ranef(M_5)$country) # zeta for first 6 countries
+head(coef(M_5)$country) # mu for first 6 countries
+
+head(residuals(M_5)) # epsilon terms for first 6 countries
+
+# tau^2 and sigma^2
+var_terms <- as.data.frame(VarCorr(M_5))[,4]
+
+ICC <- var_terms[1] / sum(var_terms) 
+ICC
+
+
+
+# Multilevel linear models, aka linear mixed effects models ---------------
+
+ggplot(sleepstudy,
+       aes(x = Days, y = Reaction)
+) + geom_point()
+
+ggplot(sleepstudy,
+       aes(x = Days, y = Reaction, colour = Subject)
+) + geom_point()
+
+ggplot(sleepstudy,
+       aes(x = Days, y = Reaction, colour = Subject)
+) + geom_point() + facet_wrap(~Subject)
+
+ggplot(sleepstudy,
+       aes(x = Days, y = Reaction, colour = Subject)
+) + geom_point() + 
+  facet_wrap(~Subject) +
+  stat_smooth(method = 'lm', se = FALSE)
+
+
+lm(Reaction ~ 0 + Subject + Subject:Days, 
+   data = sleepstudy) %>% 
+  coef()
