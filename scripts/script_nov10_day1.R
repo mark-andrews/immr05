@@ -107,6 +107,4 @@ ggplot(sleepstudy,
   stat_smooth(method = 'lm', se = FALSE)
 
 
-lm(Reaction ~ 0 + Subject + Subject:Days, 
-   data = sleepstudy) %>% 
-  coef()
+
