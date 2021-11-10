@@ -107,4 +107,24 @@ ggplot(sleepstudy,
   stat_smooth(method = 'lm', se = FALSE)
 
 
+# lm(Reaction ~ Days, ...)
+# lm(Reaction ~ 1 + Days)
 
+M_6 <- lmer(Reaction ~ Days + (Days|Subject),
+            data = sleepstudy)
+
+# identical to
+M_6a <- lmer(Reaction ~ 1 + Days + (1 + Days|Subject),
+             data = sleepstudy)
+
+summary(M_6)
+
+# if t-value was 2.8
+# then p-value can be estimated by
+pnorm(2.8, lower.tail = FALSE) * 2
+
+
+# random intercepts only model
+M_7 <- lmer(Reaction ~ 1 + Days + (1|Subject),
+            data = sleepstudy)
+summary(M_7)
