@@ -97,3 +97,76 @@ add_predictions(sleepstudy, M_11) %>%
   geom_line(aes(y = pred)) +
   facet_wrap(~Subject) + 
   ggtitle('M_11')
+
+
+
+# Model comparison --------------------------------------------------------
+
+anova(M_9, M_6)
+
+
+M_6_ml <- lmer(Reaction ~ Days + (Days|Subject),
+               REML = FALSE,
+               data = sleepstudy)
+
+M_9_ml <- lmer(Reaction ~ 1 + Days + (1|Subject) + (0 + Days|Subject),
+               REML= FALSE,
+               data = sleepstudy)
+
+anova(M_9_ml, M_6_ml)
+logLik(M_9_ml) * -2
+logLik(M_6_ml) * -2
+logLik(M_9_ml) 
+logLik(M_6_ml) 
+
+# varying intercepts only
+M_7_ml <- lmer(Reaction ~ 1 + Days + (1|Subject),
+               REML = FALSE,
+               data = sleepstudy)
+
+M_8_ml <- lmer(Reaction ~ 1 + Days + (0 + Days | Subject),
+               REML = FALSE,
+               data = sleepstudy)
+
+anova(M_7_ml, M_6_ml)
+anova(M_8_ml, M_6_ml)
+
+anova(M_7_ml, M_8_ml)
+
+
+
+# Nested groups -----------------------------------------------------------
+
+classroom_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr05/main/data/classroom.csv")
+
+ggplot(classroom_df,
+       aes(x = ses, y = mathscore)
+) + geom_point() + 
+  facet_wrap(~schoolid)
+
+
+
+ggplot(classroom_df,
+       aes(x = ses, y = mathscore)
+) + geom_point() + 
+  stat_smooth(method = 'lm', se = F) +
+  facet_wrap(~schoolid)
+
+ggplot(classroom_df,
+       aes(x = ses, y = mathscore)
+) + geom_point()
+
+
+M12 <- lmer(mathscore ~ 1 + ses + (1 + ses|schoolid) + (1 + ses|classid),
+            data = classroom_df)
+
+# This is NOT what you want to do ....
+# lmer(mathscore ~ 1 + ses + (1 + ses|schoolid) + (1 + ses|classid2),
+#      data = classroom_df)
+
+M13 <- lmer(mathscore ~ 1 + ses + (1 + ses|schoolid/classid2),
+            data = classroom_df)
+
+# M_13 is identical to ...
+M14 <- lmer(mathscore ~ 1 + ses + (1 + ses|schoolid) + (1 + ses|schoolid:classid2),
+            data = classroom_df)
