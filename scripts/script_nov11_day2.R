@@ -170,3 +170,31 @@ M13 <- lmer(mathscore ~ 1 + ses + (1 + ses|schoolid/classid2),
 # M_13 is identical to ...
 M14 <- lmer(mathscore ~ 1 + ses + (1 + ses|schoolid) + (1 + ses|schoolid:classid2),
             data = classroom_df)
+
+
+# Crossed structures ------------------------------------------------------
+
+blp_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr05/main/data/blp-short2.csv")
+
+# count number of observations per each word ("spelling")
+group_by(blp_df, spelling) %>% summarise(n = n())
+
+# count number of observations per each subject
+group_by(blp_df, participant) %>% summarise(n = n())
+
+M_15 <- lmer(rt ~ 1 + (1|participant) + (1|spelling),
+             data = blp_df)
+
+summary(M_15)
+
+# Using brms for Bayesian modelling ---------------------------------------
+
+library(brms)
+
+# Bayesian counterpart of a classical normal linear model using `lm`
+M_16 <- brm(Reaction ~ Days, data = sleepstudy)
+
+
+# Bayesian counterpart of multilevel linear model M_6
+M_17 <- brm(Reaction ~ Days + (Days|Subject),
+            data = sleepstudy)
