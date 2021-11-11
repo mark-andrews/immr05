@@ -180,3 +180,8 @@ M <- brm(x ~ 1, data = data_df)
 
 And all was well.
 
+# If all else fails
+
+
+An RStudio server session with Stan and `brms` installed and ready to use is available by clicking this button.
+[![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/mark-andrews/intro_bda_qub/HEAD?urlpath=rstudio)

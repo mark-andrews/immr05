@@ -46,6 +46,9 @@ Attendees of the course will need to use RStudio. Most people will want to use t
 In addition, we will use a set of additional R packages. 
 Instructions on how to install all the software is [here](software.md).
 
+An RStudio server session with Stan and `brms` installed and ready to use is available by clicking this button.
+[![Binder](https://notebooks.gesis.org/binder/badge_logo.svg)](https://notebooks.gesis.org/binder/v2/gh/mark-andrews/intro_bda_qub/HEAD?urlpath=rstudio)
+
 # Course programme 
 
 ## Day 1 
